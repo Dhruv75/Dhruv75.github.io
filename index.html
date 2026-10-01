@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dhruv Kashyap · Backend & AI engineer</title>
+<meta name="description" content="Dhruv Kashyap builds backends and AI agents with the guardrails and tests to prove they behave.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF1EC; --panel:#E2E7E0; --ink:#16233A; --muted:#556072; --line:#C6CFC5;
+  --cobalt:#2648D9; --pass:#1F7553; --fail:#B0412F;
+  --display:"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --wrap:1240px; --gut:clamp(20px,4vw,48px);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#111A29; --panel:#18233A; --ink:#E5E9E2; --muted:#9AA6B6; --line:#2A3650;
+    --cobalt:#8EA4FF; --pass:#5BC79A; --fail:#EE8A76;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111A29; --panel:#18233A; --ink:#E5E9E2; --muted:#9AA6B6; --line:#2A3650;
+  --cobalt:#8EA4FF; --pass:#5BC79A; --fail:#EE8A76;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--display);font-size:1.0625rem;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
+p{max-width:62ch}
+
+/* Nav */
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+header.nav.scrolled{border-bottom-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;text-decoration:none}
+.nav nav{display:flex;gap:clamp(14px,3vw,32px);align-items:center}
+.nav nav a{text-decoration:none;font-weight:500;font-size:.98rem}
+.nav nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.nav .contact-btn{background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:999px}
+.nav .contact-btn:hover{text-decoration:none;background:var(--cobalt)}
+@media (max-width:620px){.nav nav a.hide-sm{display:none}}
+
+/* Hero */
+.hero{padding:clamp(48px,9vw,120px) 0 clamp(40px,6vw,80px)}
+.hero h1{font-size:clamp(3rem,10vw,8.4rem);line-height:.9;letter-spacing:-.045em;font-weight:800;margin:0 0 .35em;font-variation-settings:"opsz" 96;max-width:11ch}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(28px,5vw,72px);align-items:start}
+.hero-intro p{font-size:clamp(1.15rem,1.8vw,1.35rem);line-height:1.5;margin:0 0 1.2em}
+.hero-intro .meta{color:var(--muted);font-size:1rem}
+.links-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--ink);padding:9px 16px;border-radius:999px;text-decoration:none;font-weight:500;font-size:.95rem;background:transparent;color:var(--ink);cursor:pointer;font-family:inherit}
+.pill:hover{background:var(--ink);color:var(--paper)}
+.pill.solid{background:var(--cobalt);border-color:var(--cobalt);color:#fff}
+.pill.solid:hover{filter:brightness(1.08);background:var(--cobalt);color:#fff}
+@media (max-width:880px){.hero-grid{grid-template-columns:1fr}}
+
+/* Proof panel */
+.proof{background:var(--panel);border-radius:22px;padding:clamp(18px,2.6vw,28px);border:1px solid var(--line)}
+.proof h2{font-size:1.25rem;letter-spacing:-.01em;margin:0 0 4px;font-weight:700}
+.proof .sub{color:var(--muted);font-size:.95rem;margin:0 0 18px}
+.proof-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.balance{font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+.balance strong{display:block;font-family:var(--display);font-size:2.3rem;line-height:1;color:var(--ink);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.lanes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px;font-family:var(--mono);font-size:.78rem}
+.lane{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;background:var(--paper);border:1px solid var(--line);min-width:0}
+.lane .bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.lane .bar i{display:block;height:100%;width:0;background:var(--ink)}
+.lane .st{min-width:5.5em;text-align:right;color:var(--muted)}
+.lane.ok{border-color:var(--pass)}
+.lane.ok .st{color:var(--pass);font-weight:600}
+.lane.ok .bar i{background:var(--pass)}
+.lane.no .st{color:var(--fail);font-weight:600}
+.lane.no .bar i{background:var(--fail)}
+.verdict{margin:16px 0 0;font-family:var(--mono);font-size:.82rem;min-height:2.6em;line-height:1.6}
+.verdict .ok{color:var(--pass);font-weight:600}
+.proof-actions{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.proof-actions small{color:var(--muted);font-size:.85rem}
+@media (max-width:420px){.lanes{grid-template-columns:1fr}}
+
+/* Sections */
+section.block{padding:clamp(56px,8vw,110px) 0;border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:clamp(20px,4vw,60px);margin-bottom:clamp(28px,4vw,48px)}
+.sec-head h2{font-size:clamp(2rem,4.4vw,3.4rem);line-height:1;letter-spacing:-.035em;font-weight:800;margin:0}
+.sec-head p{margin:0;font-size:1.15rem;color:var(--muted);align-self:end}
+@media (max-width:760px){.sec-head{grid-template-columns:1fr}}
+
+.about-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:clamp(20px,4vw,60px)}
+.about-body .lead{font-size:clamp(1.35rem,2.4vw,1.85rem);line-height:1.35;letter-spacing:-.01em;margin:0 0 .8em;max-width:30ch;font-weight:500}
+.about-body p{margin:0 0 1em}
+.facts{list-style:none;padding:0;margin:0;font-size:.98rem}
+.facts li{padding:12px 0;border-bottom:1px solid var(--line)}
+.facts li span{display:block;color:var(--muted);font-size:.85rem}
+@media (max-width:760px){.about-body{grid-template-columns:1fr}}
+
+/* Capabilities */
+.caps{list-style:none;margin:0;padding:0}
+.caps li{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:clamp(12px,3vw,40px);padding:clamp(18px,2.4vw,28px) 0;border-top:1px solid var(--line);align-items:baseline}
+.caps li:last-child{border-bottom:1px solid var(--line)}
+.caps h3{margin:0;font-size:clamp(1.5rem,3vw,2.3rem);letter-spacing:-.03em;line-height:1.05;font-weight:700}
+.caps p{margin:0;color:var(--ink)}
+.caps .stack{color:var(--muted);font-size:.95rem}
+@media (max-width:760px){.caps li{grid-template-columns:1fr;gap:8px}}
+
+/* Process */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;counter-reset:s}
+.step{padding:0 clamp(12px,2vw,28px) 0 0;position:relative}
+.step .n{font-size:clamp(3rem,6vw,5rem);font-weight:800;letter-spacing:-.05em;line-height:1;color:var(--cobalt);display:block;margin-bottom:14px;font-variant-numeric:tabular-nums}
+.step h3{margin:0 0 8px;font-size:1.45rem;letter-spacing:-.02em}
+.step p{margin:0;color:var(--muted);font-size:1rem}
+.step::before{content:"";position:absolute;left:0;right:0;top:-22px;height:2px;background:var(--line)}
+.step:first-child::before{background:var(--ink)}
+.steps-wrap{padding-top:22px}
+@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:48px}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+
+/* Work */
+.work{list-style:none;margin:0;padding:0}
+.work li{border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:clamp(12px,3vw,32px)}
+.work .acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.work li:last-child{border-bottom:1px solid var(--line)}
+.work button.row{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(12px,3vw,40px);align-items:center;padding:clamp(22px,3vw,36px) 0}
+.work button.row:focus-visible{outline:2px solid var(--cobalt);outline-offset:4px}
+.work .t{font-size:clamp(2rem,5.4vw,4.4rem);font-weight:800;letter-spacing:-.045em;line-height:.95}
+.work .k{color:var(--muted);font-size:1.02rem}
+.work .k b{display:block;color:var(--ink);font-weight:500;font-size:1.08rem;margin-bottom:2px}
+.work .open{font-weight:500;border:1.5px solid var(--ink);border-radius:999px;padding:8px 16px;white-space:nowrap;font-size:.95rem}
+.work button.row:hover .t{color:var(--cobalt)}
+@media (max-width:860px){.work li{grid-template-columns:1fr;gap:0;padding-bottom:22px}.work button.row{grid-template-columns:1fr;gap:10px;padding-bottom:14px}.work .acts{justify-content:flex-start}}
+
+dialog{border:none;padding:0;background:var(--paper);color:var(--ink);border-radius:24px;width:min(760px,calc(100vw - 32px));max-height:calc(100dvh - 48px);box-shadow:0 30px 80px rgba(10,20,40,.35)}
+dialog::backdrop{background:rgba(14,22,38,.55);backdrop-filter:blur(3px)}
+dialog[open]{animation:pop .22s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.dlg{padding:clamp(22px,4vw,40px);overflow:auto;max-height:calc(100dvh - 48px)}
+.dlg-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.dlg h3{font-size:clamp(2rem,5vw,3.2rem);letter-spacing:-.04em;line-height:1;margin:0 0 6px;font-weight:800}
+.dlg .kind{color:var(--muted);margin:0 0 26px}
+.dlg h4{margin:22px 0 8px;font-size:1.05rem;font-weight:700}
+.dlg ul{margin:0;padding-left:1.1em}
+.dlg li{margin-bottom:8px}
+.dlg .stackline{font-family:var(--mono);font-size:.8rem;color:var(--muted);margin-top:22px}
+.close{all:unset;cursor:pointer;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;flex:none;font-size:1.3rem;line-height:1}
+.close:hover{background:var(--ink);color:var(--paper)}
+.close:focus-visible{outline:2px solid var(--cobalt);outline-offset:3px}
+
+/* Experience */
+.role{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:clamp(20px,4vw,60px)}
+.role h3{margin:0;font-size:clamp(1.8rem,3.4vw,2.6rem);letter-spacing:-.035em;line-height:1}
+.role .when{color:var(--muted);margin:8px 0 0}
+.role ul{margin:0;padding:0;list-style:none}
+.role li{padding:14px 0;border-top:1px solid var(--line)}
+.role li:first-child{border-top:none;padding-top:0}
+.numbers{display:flex;flex-wrap:wrap;gap:clamp(20px,4vw,48px);margin-top:28px}
+.numbers div{font-size:.92rem;color:var(--muted)}
+.numbers strong{display:block;font-size:clamp(2rem,4vw,2.8rem);color:var(--ink);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+@media (max-width:760px){.role{grid-template-columns:1fr}}
+
+/* Recognition + edu */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px)}
+.list{list-style:none;margin:0;padding:0}
+.list li{padding:18px 0;border-top:1px solid var(--line)}
+.list li:last-child{border-bottom:1px solid var(--line)}
+.list b{display:block;font-size:1.2rem;letter-spacing:-.01em;margin-bottom:2px}
+.list span{color:var(--muted);font-size:.98rem}
+.two h2{font-size:clamp(1.8rem,3.4vw,2.6rem);letter-spacing:-.035em;margin:0 0 20px;line-height:1}
+@media (max-width:760px){.two{grid-template-columns:1fr}}
+
+/* Footer */
+footer{background:var(--ink);color:var(--paper);padding:clamp(64px,10vw,130px) 0 calc(36px + env(safe-area-inset-bottom,0px));margin-bottom:calc(-1 * env(safe-area-inset-bottom,0px))}
+footer .big{font-size:clamp(2.6rem,8vw,6.6rem);line-height:.92;letter-spacing:-.045em;font-weight:800;margin:0 0 .5em;max-width:13ch}
+footer .mail{font-size:clamp(1.3rem,3vw,2rem);text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px;font-weight:500;word-break:break-all}
+footer .mail:hover{color:var(--cobalt)}
+footer .foot-pill{border-color:var(--paper);color:var(--paper)}
+footer .foot-pill:hover{background:var(--paper);color:var(--ink)}
+.foot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:clamp(48px,7vw,90px);padding-top:24px;border-top:1px solid color-mix(in srgb,var(--paper) 25%,transparent);font-size:.95rem}
+.foot-grid h3{font-size:.95rem;font-weight:500;opacity:.6;margin:0 0 8px}
+.foot-grid a{display:block;text-decoration:none;margin-bottom:4px}
+.foot-grid a:hover{text-decoration:underline}
+@media (max-width:620px){.foot-grid{grid-template-columns:1fr 1fr}}
+
+/* GSAP helpers */
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.w > span{display:inline-block;will-change:transform}
+.steps-wrap{position:relative}
+.track{position:absolute;top:0;left:0;right:0;height:2px;background:var(--cobalt);transform-origin:left center;transform:scaleX(0);z-index:1}
+.js-anim .step::before{background:var(--line)}
+
+/* Smooth scroll (Lenis) */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+
+/* Scroll progress */
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--cobalt);transform-origin:left center;transform:scaleX(0)}
+
+/* Marquee */
+.marquee{overflow:hidden;border-top:1px solid var(--line);padding:clamp(18px,2.6vw,30px) 0;white-space:nowrap}
+.mq-track{display:inline-flex;will-change:transform}
+.mq-track span{font-size:clamp(1.8rem,4.6vw,3.6rem);font-weight:800;letter-spacing:-.04em;padding:0 .35em;display:inline-flex;align-items:center;gap:.7em}
+.mq-track span::after{content:"✓";font-size:.45em;color:var(--pass);font-weight:700}
+.mq-track span:nth-child(even){color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+
+/* Custom cursor */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;mix-blend-mode:difference;display:none}
+.has-cursor .cursor-dot,.has-cursor .cursor-ring{display:block}
+.cursor-dot{width:8px;height:8px;margin:-4px 0 0 -4px;background:#fff}
+.cursor-ring{width:40px;height:40px;margin:-20px 0 0 -20px;border:1.5px solid #fff;display:none;place-items:center}
+.has-cursor .cursor-ring{display:grid}
+.cursor-ring b{font-size:13px;font-weight:600;color:#000;opacity:0;letter-spacing:.01em;font-family:var(--display)}
+.has-cursor, .has-cursor *{cursor:none!important}
+.has-cursor.dlg-open, .has-cursor.dlg-open *{cursor:auto!important}
+.has-cursor.dlg-open .cursor-dot,.has-cursor.dlg-open .cursor-ring{display:none}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  dialog[open]{animation:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="progress" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="brand" href="#top">Dhruv Kashyap</a>
+    <nav aria-label="Main">
+      <a href="#work">Work</a>
+      <a href="#experience" class="hide-sm">Experience</a>
+      <a href="#about" class="hide-sm">About</a>
+      <a href="Dhruv_Kashyap_Resume.pdf" download data-cursor="Download">Resume</a>
+      <a href="#contact" class="contact-btn">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Software that proves it works.</h1>
+      <div class="hero-grid">
+        <div class="hero-intro">
+          <p>I'm Dhruv, a final-year computer science student at Delhi Technological University. I build backends and AI agents, then write the tests and guardrails that show they behave when things get messy.</p>
+          <p class="meta">Open to software engineering and AI/ML roles for 2027.</p>
+          <div class="links-row">
+            <a class="pill solid" href="#work">See my work</a>
+            <a class="pill" href="Dhruv_Kashyap_Resume.pdf" download data-cursor="Download">Download resume</a>
+            <a class="pill" href="https://github.com/Dhruv75" target="_blank" rel="noopener">GitHub</a>
+            <a class="pill" href="https://linkedin.com/in/dhruvkashyap-dtu/" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+        </div>
+
+        <div class="proof" aria-labelledby="proof-title">
+          <div class="proof-top">
+            <div>
+              <h2 id="proof-title">Ten transfers, money for three</h2>
+              <p class="sub" style="margin:0">The double-spend test from PaymentZ, replayed. Each transfer is ₹500.</p>
+            </div>
+            <div class="balance" aria-live="polite">Wallet balance<strong id="bal">₹1,500</strong></div>
+          </div>
+          <div class="lanes" id="lanes"></div>
+          <p class="verdict" id="verdict" aria-live="polite">All ten requests fire at the same moment. Run it to see how many get through.</p>
+          <div class="proof-actions">
+            <button class="pill solid" id="run" type="button" data-cursor="Run">Run 10 transfers</button>
+            <small>Order is random each run. The outcome isn't. <a href="https://paymentz-r50w.onrender.com/" target="_blank" rel="noopener">Try PaymentZ live</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="mq-track"><span>C++</span><span>Node.js</span><span>Python</span><span>DuckDB</span><span>MongoDB</span><span>React</span><span>Next.js</span><span>sqlglot</span><span>Convex</span><span>Docker</span><span>pytest</span><span>GitHub Actions</span><span>C++</span><span>Node.js</span><span>Python</span><span>DuckDB</span><span>MongoDB</span><span>React</span><span>Next.js</span><span>sqlglot</span><span>Convex</span><span>Docker</span><span>pytest</span><span>GitHub Actions</span></div></div>
+
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="sec-head"><h2>Who I am</h2></div>
+      <div class="about-body">
+        <ul class="facts">
+          <li><span>Studying</span>B.Tech Computer Science, DTU, 2023 to 2027</li>
+          <li><span>Writes mostly in</span>C++, Python, JavaScript, SQL</li>
+          <li><span>Based in</span>New Delhi</li>
+        </ul>
+        <div>
+          <p class="lead">I like the part of engineering where you stop hoping the code is right and start showing it.</p>
+          <p>At LakshX I built an agent that lets analysts question network logs in plain English, and spent as much time on what it must never do as on what it should. On my own projects I take the same view: a payments backend isn't done until a concurrency test says it can't double-spend.</p>
+          <p>Outside of building, I've solved more than 700 DSA problems, mostly in C++.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="skills">
+    <div class="wrap">
+      <div class="sec-head"><h2>What I build</h2><p>No fixed stack. I pick what the problem needs, and I'm comfortable on both sides of the API.</p></div>
+      <ul class="caps">
+        <li><h3>Backend systems</h3><p>APIs with transactions, idempotency and auth that hold up under concurrent load.</p><span class="stack">Node.js, Express, MongoDB, Convex, JWT, Zod</span></li>
+        <li><h3>AI agents & data</h3><p>Text-to-SQL and retrieval agents that use the model only when they have to, behind real guardrails.</p><span class="stack">Python, DuckDB, sqlglot, RAG, vector search, Pandas</span></li>
+        <li><h3>Frontend</h3><p>Real-time interfaces that stay in sync with the server without the user noticing the work.</p><span class="stack">React, Next.js, Tailwind CSS, Streamlit</span></li>
+        <li><h3>Testing & delivery</h3><p>Eval harnesses, unit and end-to-end suites, and CI that blocks a bad merge.</p><span class="stack">pytest, GitHub Actions, Docker, Git</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="process">
+    <div class="wrap">
+      <div class="sec-head"><h2>How I work</h2><p>The same four steps, whether it's a payments ledger or an LLM agent.</p></div>
+      <div class="steps-wrap">
+        <div class="track" aria-hidden="true"></div>
+        <div class="steps">
+          <div class="step"><span class="n">01</span><h3>Constrain</h3><p>Write down what must never happen: a negative balance, a write query, a made-up column.</p></div>
+          <div class="step"><span class="n">02</span><h3>Build</h3><p>Pick the simplest design that makes those failures impossible, not just unlikely.</p></div>
+          <div class="step"><span class="n">03</span><h3>Prove</h3><p>Attack it with tests: parallel requests, injection attempts, golden sets.</p></div>
+          <div class="step"><span class="n">04</span><h3>Ship</h3><p>Gate it in CI so the proof keeps running after I've moved on.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="work">
+    <div class="wrap">
+      <div class="sec-head"><h2>Selected work</h2><p>Open a project for what I built and how I checked it.</p></div>
+      <ul class="work">
+        <li><button type="button" class="row" data-p="laksh" data-cursor="Open"><span class="t">Log Analyst Agent</span><span class="k"><b>LakshX internship</b>Plain-English questions over network logs</span></button><div class="acts"><a class="pill solid" href="https://ipdr-agent-deployed.streamlit.app/" target="_blank" rel="noopener" data-cursor="Visit">Live site</a><a class="pill" href="https://github.com/Dhruv75/ipdr-agent" target="_blank" rel="noopener">Code</a><button type="button" class="pill" data-p="laksh">Details</button></div></li>
+        <li><button type="button" class="row" data-p="pay" data-cursor="Open"><span class="t">PaymentZ</span><span class="k"><b>P2P payments backend</b>Race-safe transfers with a ledger</span></button><div class="acts"><a class="pill solid" href="https://paymentz-r50w.onrender.com/" target="_blank" rel="noopener" data-cursor="Visit">Live site</a><a class="pill" href="https://github.com/Dhruv75/paymentZ-final" target="_blank" rel="noopener">Code</a><button type="button" class="pill" data-p="pay">Details</button></div></li>
+        <li><button type="button" class="row" data-p="split" data-cursor="Open"><span class="t">SplitrAI</span><span class="k"><b>Real-time expense splitter</b>Shared balances that update live</span></button><div class="acts"><a class="pill solid" href="https://split-r-ai.vercel.app/" target="_blank" rel="noopener" data-cursor="Visit">Live site</a><a class="pill" href="https://github.com/Dhruv75/splitR-AI" target="_blank" rel="noopener">Code</a><button type="button" class="pill" data-p="split">Details</button></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="experience">
+    <div class="wrap">
+      <div class="role">
+        <div>
+          <h3>AI/ML Engineer Intern, LakshX</h3>
+          <p class="when">Jan to Apr 2026, New Delhi. An early-stage startup building AI agents and analytics for small businesses.</p>
+        </div>
+        <div>
+          <ul>
+            <li>Built a hybrid Text-to-SQL and semantic-retrieval agent in Python and DuckDB so analysts without SQL could investigate network logs in plain English.</li>
+            <li>Designed a deterministic-first router that answered most queries with no LLM call at all, using the model only to break ties.</li>
+            <li>Added an AST-based SQL guardrail (sqlglot, read-only DuckDB, forced LIMIT) with schema-catalog injection to block unsafe queries and hallucinated columns.</li>
+            <li>Built a CI-gated eval harness covering injection, write and exfiltration attempts.</li>
+          </ul>
+          <div class="numbers">
+            <div><strong>80%</strong>queries with zero LLM calls</div>
+            <div><strong>14/14</strong>attack attempts blocked</div>
+            <div><strong>100%</strong>golden-set pass</div>
+            <div><strong>39/39</strong>tests green</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="recognition">
+    <div class="wrap two">
+      <div>
+        <h2>Recognition</h2>
+        <ul class="list">
+          <li><b>NPTEL Elite + Topper, top 2%</b><span>The Joy of Computing using Python, IIT Madras. Scored 96% among 20,403 certified, Jul to Oct 2025.</span></li>
+          <li><b>700+ DSA problems solved</b><span>Mostly in C++, across <a href="https://leetcode.com/u/DhruvKashyap/" target="_blank" rel="noopener">LeetCode</a> and <a href="https://www.geeksforgeeks.org/profile/dhruvkas25ll" target="_blank" rel="noopener">GeeksforGeeks</a>.</span></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Education</h2>
+        <ul class="list">
+          <li><b>Delhi Technological University</b><span>B.Tech, Computer Science Engineering, 2023 to 2027.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <p class="big">Have something that needs to hold up? Let's talk.</p>
+    <a class="mail" href="mailto:dhruvkashyap458@gmail.com">dhruvkashyap458@gmail.com</a>
+    <div class="links-row" style="margin-top:28px"><a class="pill foot-pill" href="Dhruv_Kashyap_Resume.pdf" download data-cursor="Download">Download resume (PDF)</a></div>
+    <div class="foot-grid">
+      <div><h3>Elsewhere</h3><a href="https://github.com/Dhruv75" target="_blank" rel="noopener">GitHub</a><a href="https://linkedin.com/in/dhruvkashyap-dtu/" target="_blank" rel="noopener">LinkedIn</a><a href="https://leetcode.com/u/DhruvKashyap/" target="_blank" rel="noopener">LeetCode</a></div>
+      <div><h3>On this page</h3><a href="#work">Work</a><a href="#experience">Experience</a><a href="#about">About</a></div>
+      <div><h3>Based in</h3><span>New Delhi, India</span></div>
+    </div>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <div class="dlg" id="dlg-body" data-lenis-prevent></div>
+</dialog>
+<div class="cursor-ring" aria-hidden="true"><b></b></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+/* Project details, repos and live links */
+const PROJECTS = {
+  laksh:{
+    title:"Log Analyst Agent", kind:"LakshX internship, Jan to Apr 2026",
+    did:[
+      "Hybrid Text-to-SQL plus semantic retrieval over network logs, so analysts can ask questions in plain English.",
+      "A deterministic-first router resolves about 80% of queries without calling an LLM, which cuts cost and latency.",
+      "Every generated query is parsed with sqlglot, run on a read-only DuckDB connection and given a forced LIMIT. Schema-catalog injection stops the model from inventing columns."
+    ],
+    proof:[
+      "14 of 14 injection, write and exfiltration attempts blocked.",
+      "100% pass on the golden question set, 39 of 39 tests green, all gated in CI."
+    ],
+    stack:"Python, DuckDB, sqlglot, Streamlit, pytest",
+    code:"https://github.com/Dhruv75/ipdr-agent", live:"https://ipdr-agent-deployed.streamlit.app/"
+  },
+  pay:{
+    title:"PaymentZ", kind:"Peer-to-peer payments backend",
+    did:[
+      "Transfers use an atomic conditional findOneAndUpdate inside a MongoDB multi-document transaction, so the debit, credit and ledger entry commit together or not at all.",
+      "Idempotency keys enforced by the database make client retries safe.",
+      "Auth hardened with bcrypt, pinned JWT claims and timing-equalised login. Every request is validated with Zod."
+    ],
+    proof:[
+      "Concurrency test: 10 parallel transfers against funds for 3. Exactly 3 succeed, every time.",
+      "35 unit tests plus an end-to-end suite."
+    ],
+    stack:"Node.js, Express, MongoDB, React, Zod, JWT",
+    code:"https://github.com/Dhruv75/paymentZ-final", live:"https://paymentz-r50w.onrender.com/"
+  },
+  split:{
+    title:"SplitrAI", kind:"Real-time expense splitter",
+    did:[
+      "A Splitwise-style tracker with equal, percentage and exact splits, and Clerk for sign-in.",
+      "Balances update live for everyone in a group through Convex subscriptions.",
+      "A pairwise debt-netting ledger collapses mutual debts between each pair of people."
+    ],
+    proof:[
+      "Server-side validation rejects any split that doesn't add up to the expense total."
+    ],
+    stack:"Next.js, React, Convex, Clerk",
+    code:"https://github.com/Dhruv75/splitR-AI", live:"https://split-r-ai.vercel.app/"
+  }
+};
+
+const dlg = document.getElementById('dlg');
+const body = document.getElementById('dlg-body');
+let lastBtn = null;
+const esc = s => s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+document.querySelectorAll('.work [data-p]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const p = PROJECTS[b.dataset.p]; lastBtn = b;
+    body.innerHTML = `
+      <div class="dlg-top"><div><h3 id="dlg-title">${esc(p.title)}</h3><p class="kind">${esc(p.kind)}</p></div>
+      <button class="close" type="button" aria-label="Close">×</button></div>
+      <h4>What I built</h4><ul>${p.did.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <h4>How I know it works</h4><ul>${p.proof.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      <p class="stackline">${esc(p.stack)}</p>
+      <div class="links-row">
+        <a class="pill" href="${p.code}" target="_blank" rel="noopener">View code</a>
+        ${p.live?`<a class="pill solid" href="${p.live}" target="_blank" rel="noopener">Open live site</a>`:''}
+      </div>`;
+    body.querySelector('.close').addEventListener('click',()=>dlg.close());
+    dlg.showModal();
+    document.documentElement.classList.add('dlg-open');
+    if(window.__lenis) window.__lenis.stop();
+  });
+});
+dlg.addEventListener('click',e=>{ if(e.target===dlg) dlg.close(); });
+dlg.addEventListener('close',()=>{
+  document.documentElement.classList.remove('dlg-open');
+  if(window.__lenis) window.__lenis.start();
+  if(lastBtn) lastBtn.focus();
+});
+
+/* Sticky nav border */
+const nav = document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>8),{passive:true});
+
+/* Double-spend demo */
+const lanesEl = document.getElementById('lanes');
+const balEl = document.getElementById('bal');
+const verdict = document.getElementById('verdict');
+const runBtn = document.getElementById('run');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt = n => '₹' + n.toLocaleString('en-IN');
+const N = 10, AMT = 500, START = 1500;
+
+function buildLanes(){
+  lanesEl.innerHTML = '';
+  for(let i=1;i<=N;i++){
+    const d = document.createElement('div');
+    d.className='lane'; d.id='lane'+i;
+    d.innerHTML = `<span>#${String(i).padStart(2,'0')}</span><span class="bar"><i></i></span><span class="st">queued</span>`;
+    lanesEl.appendChild(d);
+  }
+}
+buildLanes();
+
+let running = false;
+runBtn.addEventListener('click', async ()=>{
+  if(running) return;
+  running = true; runBtn.disabled = true;
+  buildLanes();
+  let balance = START; balEl.textContent = fmt(balance);
+  verdict.textContent = 'Firing 10 transfers at once…';
+  const ledger = [];
+  const jobs = [];
+  for(let i=1;i<=N;i++){
+    const lane = document.getElementById('lane'+i);
+    const bar = lane.querySelector('i'); const st = lane.querySelector('.st');
+    const t = reduce ? 0 : 500 + Math.random()*1400;
+    st.textContent = 'in flight';
+    if(!reduce){ bar.style.transition = `width ${t}ms linear`; requestAnimationFrame(()=>requestAnimationFrame(()=>bar.style.width='100%')); }
+    else bar.style.width='100%';
+    jobs.push(new Promise(res=>setTimeout(()=>{
+      // atomic conditional update: debit only if balance >= amount
+      if(balance >= AMT){ balance -= AMT; ledger.push(i); lane.classList.add('ok'); st.textContent='committed'; }
+      else { lane.classList.add('no'); st.textContent='rejected'; }
+      balEl.textContent = fmt(balance);
+      res();
+    }, t)));
+  }
+  await Promise.all(jobs);
+  verdict.innerHTML = `<span class="ok">${ledger.length} committed</span>, ${N-ledger.length} rejected for insufficient funds. Balance never went below ₹0, and the ledger has exactly ${ledger.length} entries.`;
+  runBtn.textContent = 'Run again';
+  runBtn.disabled = false; running = false;
+  if(window.gsap && !reduce){
+    gsap.fromTo('#verdict',{y:8,opacity:0},{y:0,opacity:1,duration:.5,ease:'power2.out'});
+    gsap.fromTo('.lane.ok',{scale:.96},{scale:1,duration:.5,ease:'back.out(3)',stagger:.06});
+  }
+});
+
+/* ---------- GSAP animations ---------- */
+(function(){
+  if(!window.gsap || reduce) return;
+  gsap.registerPlugin(ScrollTrigger);
+  document.documentElement.classList.add('js-anim');
+
+  const splitWords = el => {
+    el.innerHTML = el.textContent.trim().split(/\s+/)
+      .map(w=>`<span class="w"><span>${w}</span></span>`).join(' ');
+    return el.querySelectorAll('.w > span');
+  };
+
+  // 1. Hero load sequence
+  const heroWords = splitWords(document.querySelector('.hero h1'));
+  gsap.timeline({defaults:{ease:'power4.out'}})
+    .from(heroWords,{yPercent:115,rotate:4,duration:1.15,stagger:.09})
+    .from('.hero-intro > *',{y:26,opacity:0,duration:.8,stagger:.1},'-=.7')
+    .from('.proof',{y:50,opacity:0,duration:1},'-=.75')
+    .from('.lane',{opacity:0,x:-12,duration:.4,stagger:.035,ease:'power2.out'},'-=.5')
+    .from('.nav .wrap > *',{y:-20,opacity:0,duration:.6,stagger:.1},0);
+
+  // Hero headline drifts up slightly as you scroll away
+  gsap.to('.hero h1',{yPercent:-18,opacity:.35,ease:'none',
+    scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+  // 2. Section headings
+  gsap.utils.toArray('.sec-head h2, .two h2').forEach(h=>{
+    const words = splitWords(h);
+    gsap.from(words,{yPercent:110,duration:.9,stagger:.06,ease:'power4.out',
+      scrollTrigger:{trigger:h,start:'top 85%'}});
+  });
+  gsap.utils.toArray('.sec-head p').forEach(p=>gsap.from(p,{y:20,opacity:0,duration:.8,
+    scrollTrigger:{trigger:p,start:'top 88%'}}));
+
+  // 3. About
+  gsap.from('.about-body .lead',{y:30,opacity:0,duration:.9,ease:'power3.out',
+    scrollTrigger:{trigger:'.about-body',start:'top 80%'}});
+  gsap.from('.facts li',{x:-24,opacity:0,duration:.6,stagger:.1,
+    scrollTrigger:{trigger:'.facts',start:'top 82%'}});
+
+  // 4. Capability rows
+  gsap.utils.toArray('.caps li').forEach(li=>{
+    gsap.from(li.children,{y:32,opacity:0,duration:.75,stagger:.08,ease:'power3.out',
+      scrollTrigger:{trigger:li,start:'top 86%'}});
+  });
+
+  // 5. Process: a line fills as you scroll, each step lights up as it's reached
+  const steps = gsap.utils.toArray('.step');
+  gsap.set(steps,{opacity:.25});
+  gsap.timeline({scrollTrigger:{trigger:'.steps-wrap',start:'top 75%',end:'bottom 55%',scrub:.6}})
+    .to('.track',{scaleX:1,ease:'none',duration:steps.length},0)
+    .to(steps,{opacity:1,duration:.4,stagger:1},0);
+
+  // 6. Work rows slide in, titles from a clipped mask
+  gsap.utils.toArray('.work li').forEach(li=>{
+    const t = li.querySelector('.t');
+    gsap.timeline({scrollTrigger:{trigger:li,start:'top 88%'}})
+      .from(t,{x:-60,opacity:0,duration:.9,ease:'power4.out'})
+      .from(li.querySelectorAll('.k, .acts .pill'),{y:16,opacity:0,duration:.6,stagger:.08},'-=.6');
+  });
+
+  // 7. Experience: bullets cascade, stats count up
+  gsap.from('.role li',{y:20,opacity:0,duration:.6,stagger:.1,
+    scrollTrigger:{trigger:'.role ul',start:'top 82%'}});
+  gsap.utils.toArray('.numbers strong').forEach(el=>{
+    const m = el.textContent.match(/^(\d+)(.*)$/); if(!m) return;
+    const end = +m[1], rest = m[2], o = {v:0};
+    el.textContent = '0' + rest;
+    gsap.to(o,{v:end,duration:1.6,ease:'power2.out',
+      onUpdate:()=>el.textContent = Math.round(o.v) + rest,
+      scrollTrigger:{trigger:'.numbers',start:'top 88%'}});
+  });
+
+  // 8. Recognition / education lists
+  gsap.utils.toArray('.list').forEach(l=>gsap.from(l.children,{y:24,opacity:0,duration:.6,stagger:.1,
+    scrollTrigger:{trigger:l,start:'top 85%'}}));
+
+  // 9. Footer statement
+  const footWords = splitWords(document.querySelector('footer .big'));
+  gsap.timeline({scrollTrigger:{trigger:'footer',start:'top 70%'}})
+    .from(footWords,{yPercent:115,duration:1,stagger:.06,ease:'power4.out'})
+    .from('footer .mail',{y:20,opacity:0,duration:.7},'-=.5')
+    .from('.foot-grid > div',{y:20,opacity:0,duration:.6,stagger:.1},'-=.4');
+
+  // 11. Smooth scrolling
+  if(window.Lenis){
+    const lenis = new Lenis({lerp:.1, smoothWheel:true});
+    window.__lenis = lenis;
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+      const id = a.getAttribute('href'); const el = id==='#top' ? 0 : document.querySelector(id);
+      if(el===null) return; e.preventDefault();
+      lenis.scrollTo(el,{offset:-70,duration:1.3});
+    }));
+  }
+
+  // 12. Scroll progress under the nav
+  gsap.to('.progress',{scaleX:1,ease:'none',
+    scrollTrigger:{trigger:document.body,start:'top top',end:'bottom bottom',scrub:.3}});
+
+  // 13. Marquee that speeds up and flips direction with your scroll
+  const mq = gsap.to('.mq-track',{xPercent:-50,duration:28,ease:'none',repeat:-1});
+  let dir = 1;
+  ScrollTrigger.create({start:0,end:'max',onUpdate:self=>{
+    dir = self.direction;
+    const boost = Math.min(Math.abs(self.getVelocity())/250,6);
+    gsap.to(mq,{timeScale:dir*(1+boost),duration:.2,overwrite:true});
+    gsap.to(mq,{timeScale:dir,duration:1.2,delay:.2,ease:'power2.out'});
+  }});
+
+  // 14. Project titles skew with scroll speed
+  const skewTo = gsap.quickTo('.work .t','skewX',{duration:.5,ease:'power3.out'});
+  ScrollTrigger.create({start:0,end:'max',onUpdate:self=>{
+    skewTo(gsap.utils.clamp(-10,10,self.getVelocity()/-300));
+  }});
+
+  // 15. Big numbers in the process drift at their own pace
+  gsap.utils.toArray('.step .n').forEach((n,i)=>gsap.fromTo(n,{y:30+i*14},{y:-10,ease:'none',
+    scrollTrigger:{trigger:'.steps-wrap',start:'top bottom',end:'bottom top',scrub:true}}));
+
+  // 10. Buttons lean toward the cursor
+  if(matchMedia('(hover:hover)').matches){
+    document.querySelectorAll('.pill, .contact-btn').forEach(b=>{
+      b.addEventListener('mousemove',e=>{
+        const r = b.getBoundingClientRect();
+        gsap.to(b,{x:(e.clientX-r.left-r.width/2)*.25,y:(e.clientY-r.top-r.height/2)*.35,duration:.4,ease:'power3.out'});
+      });
+      b.addEventListener('mouseleave',()=>gsap.to(b,{x:0,y:0,duration:.6,ease:'elastic.out(1,.4)'}));
+    });
+  }
+})();
+
+/* ---------- Custom cursor ---------- */
+(function(){
+  if(!window.gsap || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  const root = document.documentElement;
+  const dot = document.querySelector('.cursor-dot');
+  const ring = document.querySelector('.cursor-ring');
+  const label = ring.querySelector('b');
+  root.classList.add('has-cursor');
+  gsap.set([dot,ring],{opacity:0});
+  const lag = reduce ? .01 : .45;
+  const dx = gsap.quickTo(dot,'x',{duration:.08}), dy = gsap.quickTo(dot,'y',{duration:.08});
+  const rx = gsap.quickTo(ring,'x',{duration:lag,ease:'power3.out'}), ry = gsap.quickTo(ring,'y',{duration:lag,ease:'power3.out'});
+  let shown = false;
+  addEventListener('mousemove',e=>{
+    if(!shown){ gsap.set([dot,ring],{x:e.clientX,y:e.clientY}); gsap.to([dot,ring],{opacity:1,duration:.3}); shown=true; }
+    dx(e.clientX); dy(e.clientY); rx(e.clientX); ry(e.clientY);
+  });
+  document.addEventListener('mouseleave',()=>{ gsap.to([dot,ring],{opacity:0,duration:.3}); shown=false; });
+  addEventListener('mousedown',()=>gsap.to(ring,{scale:.8,duration:.15}));
+  addEventListener('mouseup',()=>gsap.to(ring,{scale:ring.dataset.s||1,duration:.3,ease:'back.out(3)'}));
+
+  const set = (scale,text)=>{
+    ring.dataset.s = scale;
+    gsap.to(ring,{scale,duration:.4,ease:'power3.out'});
+    gsap.to(dot,{scale:text?0:(scale>1?0:1),duration:.25});
+    label.textContent = text||'';
+    gsap.to(label,{opacity:text?1:0,duration:.25});
+    ring.style.background = text ? '#fff' : 'transparent';
+  };
+  document.addEventListener('mouseover',e=>{
+    const t = e.target.closest('[data-cursor], a, button');
+    if(!t) return set(1);
+    if(t.dataset.cursor) return set(2.1, t.dataset.cursor);
+    set(1.6);
+  });
+})();
+</script>
+</body>
+</html>
